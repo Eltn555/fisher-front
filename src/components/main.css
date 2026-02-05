@@ -43,11 +43,43 @@ input[type="date"] {
 
 select {
     cursor: pointer;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23333' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 12px;
+    padding-right: 36px;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    transition: all 0.2s ease;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+select:hover {
+    border-color: var(--tg-theme-button-color, #3390ec);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 select:focus {
     outline: none;
     border-color: var(--tg-theme-button-color, #3390ec);
+    box-shadow: 0 0 0 3px rgba(51, 144, 236, 0.1);
+}
+
+select option {
+    padding: 12px;
+    background: #ffffff;
+    color: #000000;
+    border: none;
+}
+
+select option:hover {
+    background: #f0f0f0;
+}
+
+select option:checked {
+    background: var(--tg-theme-button-color, #3390ec);
+    color: #ffffff;
 }
 
 textarea {
@@ -155,4 +187,65 @@ button:disabled {
 
 .userManagement-btn button:hover {
     opacity: 0.9;
+}
+
+.tabs-container {
+    background: #ffffff;
+    border-radius: 12px;
+    margin-bottom: 24px;
+    overflow: hidden;
+}
+
+.tabs-menu {
+    display: grid;
+    grid-template-columns: 1fr;
+    background: #e8d5ff;
+    align-items: center;
+    padding: 4px;
+    border-radius: 12px;
+    gap: 4px;
+}
+
+@media (min-width: 768px) {
+    .tabs-menu {
+        grid-template-columns: repeat(5, 1fr);
+    }
+}
+
+.tab-item {
+    flex: 1;
+    padding: 10px 8px;
+    background: transparent;
+    border: none;
+    color: #000000;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    text-align: center;
+    border-radius: 8px;
+    transition: all 0.2s;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.tab-item.active,
+.tab-item[data-state="active"] {
+    background: #3390ec;
+    color: #ffffff;
+}
+
+.tab-item:hover:not(.active):not([data-state="active"]) {
+    opacity: 0.7;
+}
+
+.tab-separator {
+    width: 1px;
+    height: 20px;
+    background: #d0b8e8;
+    margin: 0 2px;
+}
+
+.tab-content {
+    min-height: 100px;
 }

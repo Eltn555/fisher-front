@@ -1,8 +1,10 @@
-import { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { api } from '../services/api'
 import type { TelegramWebApp } from '../types/telegram'
-import './Form.css'
+import { Tabs, TabsList, TabsTrigger, TabsContent } from './ui/tabs'
+import './main.css'
+import MainForm from './forms/mainForm'
 
 const typeLabels: Record<string, string> = {
   'c': 'Температура воды (°C)',
@@ -21,10 +23,10 @@ interface KgsInput {
 function Form() {
   const navigate = useNavigate()
   const [tg, setTg] = useState<TelegramWebApp | null>(null)
-  const [username, setUsername] = useState('')
-  const [date, setDate] = useState('')
+  const [user, setUser] = useState<any | null>(null)
+  const [activeDate, setActiveDate] = useState('')
   const [type, setType] = useState('')
-  const [location, setLocation] = useState('')
+  const [activeLocation, setActiveLocation] = useState('')
   const [value, setValue] = useState('')
   const [kgsInputs, setKgsInputs] = useState<KgsInput[]>([{ id: 1, value: '' }])
   const [locations, setLocations] = useState<string[]>([])
@@ -41,23 +43,22 @@ function Form() {
       
       const user = webApp.initDataUnsafe.user
       if (user) {
-        const fullName = `${user.first_name || ''} ${user.last_name || ''}`.trim()
-        setUsername(fullName)
+        setUser(user)
       }
     }
   }, [])
 
   useEffect(() => {
-    if (tg) {
-      loadLocations()
-      checkAdminStatus()
-    }
+    // if (tg) {
+    //   loadLocations()
+    //   checkAdminStatus()
+    // }
   }, [tg])
 
   useEffect(() => {
     // Set today's date as default
     const today = new Date().toISOString().split('T')[0]
-    setDate(today)
+    setActiveDate(today)
   }, [])
 
   const loadLocations = async () => {
@@ -127,7 +128,7 @@ function Form() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     
-    if (!date || !type || !location) {
+    if (!activeDate || !type || !activeLocation) {
       showMessage('❌ Пожалуйста, заполните все обязательные поля', 'error')
       return
     }
@@ -175,8 +176,8 @@ function Form() {
 
     try {
       const data = {
-        date,
-        location,
+        date: activeDate,
+        location: activeLocation,
         type,
         value: finalValue,
       }
@@ -186,9 +187,9 @@ function Form() {
       if (result.success) {
         showMessage(result.message, 'success')
         // Reset form
-        setDate(new Date().toISOString().split('T')[0])
+        setActiveDate(new Date().toISOString().split('T')[0])
         setType('')
-        setLocation('')
+        setActiveLocation('')
         setValue('')
         setKgsInputs([{ id: 1, value: '' }])
       } else {
@@ -224,10 +225,30 @@ function Form() {
         </div>
       )}
       
-      <h1>Форма отправки данных</h1>
-      <p className="username-text">
-        Здравствуйте, <b>{username}</b>, заполните форму ниже, чтобы отправить данные в систему.
-      </p>
+      <Tabs defaultValue="Главное" className="tabs-container">
+        <TabsList className="tabs-menu">
+          <TabsTrigger value="Главное" className="tab-item">Главное</TabsTrigger>
+          <TabsTrigger value="Контрольный отлов" className="tab-item">Контрольный отлов</TabsTrigger>
+          <TabsTrigger value="Продажа" className="tab-item">Продажа</TabsTrigger>
+          <TabsTrigger value="Зарыбление" className="tab-item">Зарыбление</TabsTrigger>
+          <TabsTrigger value="Убыль" className="tab-item">Убыль</TabsTrigger>
+        </TabsList>
+        <TabsContent value="Главное" className="tab-content">
+          <MainForm locations={locations} location={activeLocation} date={activeDate} />
+        </TabsContent>
+        <TabsContent value="Контрольный отлов" className="tab-content">
+          <div></div>
+        </TabsContent>
+        <TabsContent value="Продажа" className="tab-content">
+          <div></div>
+        </TabsContent>
+        <TabsContent value="Зарыбление" className="tab-content">
+          <div></div>
+        </TabsContent>
+        <TabsContent value="Убыль" className="tab-content">
+          <div></div>
+        </TabsContent>
+      </Tabs>
       
       <form id="form" onSubmit={handleSubmit}>
         <div className="form-group">
@@ -236,8 +257,8 @@ function Form() {
             type="date"
             id="date"
             name="date"
-            value={date}
-            onChange={(e) => setDate(e.target.value)}
+            value={activeDate}
+            onChange={(e) => setActiveDate(e.target.value)}
             required
           />
         </div>
@@ -266,8 +287,8 @@ function Form() {
           <select
             id="location"
             name="location"
-            value={location}
-            onChange={(e) => setLocation(e.target.value)}
+            value={activeLocation}
+            onChange={(e) => setActiveLocation(e.target.value)}
             required
           >
             <option value="">{locations.length > 0 ? 'Выберите пруд...' : 'Загрузка прудов...'}</option>
