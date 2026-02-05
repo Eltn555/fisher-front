@@ -1,5 +1,5 @@
 import { HashRouter, Routes, Route } from 'react-router-dom'
-import Form from './components/Form'
+import Form from './components/main'
 import UserManagement from './components/UserManagement'
 
 function App() {
