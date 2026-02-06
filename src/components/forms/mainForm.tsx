@@ -24,14 +24,20 @@ function MainForm({ locations: initialLocations, location: initialLocation, date
   })
 
   useEffect(() => {
+    if (initialLocations && initialLocations.length > 0) {
+      setLocations(initialLocations)
+    }
+  }, [initialLocations])
+
+  useEffect(() => {
     if (initialLocation) {
-      setFormData({ ...formData, location: initialLocation })
+      setFormData(prev => ({ ...prev, location: initialLocation }))
     }
   }, [initialLocation])
 
   useEffect(() => {
     if (initialDate) {
-      setFormData({ ...formData, date: initialDate })
+      setFormData(prev => ({ ...prev, date: initialDate }))
     }
   }, [initialDate])
 
@@ -56,7 +62,7 @@ function MainForm({ locations: initialLocations, location: initialLocation, date
     
     try {
       const response = await api.submitMainForm(formData)
-      if (response.success) {
+      if (response.success) { 
         toast.success(response.message || 'Данные успешно отправлены')
         // Reset form except location and date
         setFormData({
