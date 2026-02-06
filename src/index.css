@@ -1,8 +1,4 @@
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+@import "tailwindcss";
 
 body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
@@ -10,6 +6,8 @@ body {
     color: var(--tg-theme-text-color, #000000);
     padding: 10px;
     min-height: 100vh;
+    max-width: 768px;
+    margin: 0 auto;
 }
 
 #root {

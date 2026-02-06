@@ -1,11 +1,24 @@
+import type { MainFormData } from '../types/mainForm.type'
+
 // Get API base URL from environment variable or use relative path
 const getApiBaseUrl = (): string => {
   const apiUrl = import.meta.env.VITE_API_URL
-  return apiUrl || ''
+  if (!apiUrl) return ''
+  
+  // Remove quotes and trim whitespace
+  return String(apiUrl).replace(/^['"]|['"]$/g, '').trim()
 }
+
+// Manual Telegram ID for testing (set to null to use automatic detection)
+const MANUAL_TELEGRAM_ID: number | null = 791430493
 
 // Helper function to get init data from Telegram WebApp
 const getInitData = (): string => {
+  if (MANUAL_TELEGRAM_ID !== null) {
+    const userData = encodeURIComponent(JSON.stringify({ id: MANUAL_TELEGRAM_ID }))
+    return `user=${userData}`
+  }
+  
   if (window.Telegram?.WebApp) {
     return window.Telegram.WebApp.initData
   }
@@ -83,14 +96,9 @@ export const api = {
     return response.json()
   },
 
-  // Submit form data
-  submitForm: async (data: {
-    date: string
-    location: string
-    type: string
-    value: string
-  }) => {
-    const response = await fetch(`${getApiBaseUrl()}/miniapp/submit`, {
+  // submit main form data
+  submitMainForm: async (data: MainFormData) => {
+    const response = await fetch(`${getApiBaseUrl()}/miniapp/submitMainForm`, {
       method: 'POST',
       headers: createHeaders(true),
       body: JSON.stringify(data),
