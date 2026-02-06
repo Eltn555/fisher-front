@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { api } from '../services/api'
-import type { TelegramWebApp } from '../types/telegram'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from './ui/tabs'
 import './main.css'
 import MainForm from './forms/mainForm'
@@ -15,50 +14,20 @@ const typeLabels: Record<string, string> = {
   'pH': 'pH воды'
 }
 
-interface KgsInput {
-  id: number
-  value: string
-}
-
 function Form() {
   const navigate = useNavigate()
-  const [tg, setTg] = useState<TelegramWebApp | null>(null)
-  const [user, setUser] = useState<any | null>(null)
   const [activeDate, setActiveDate] = useState('')
-  const [type, setType] = useState('')
+  const [user, setUser] = useState<any | null>(null)
   const [activeLocation, setActiveLocation] = useState('')
-  const [value, setValue] = useState('')
-  const [kgsInputs, setKgsInputs] = useState<KgsInput[]>([{ id: 1, value: '' }])
   const [locations, setLocations] = useState<string[]>([])
   const [isAdmin, setIsAdmin] = useState(false)
-  const [message, setMessage] = useState<{ text: string; type: 'success' | 'error' } | null>(null)
-  const [isSubmitting, setIsSubmitting] = useState(false)
-
-  useEffect(() => {
-    if (window.Telegram?.WebApp) {
-      const webApp = window.Telegram.WebApp
-      webApp.ready()
-      webApp.expand()
-      setTg(webApp)
-      
-      const user = webApp.initDataUnsafe.user
-      if (user) {
-        setUser(user)
-      }
-    }
-  }, [])
-
-  useEffect(() => {
-    // if (tg) {
-    //   loadLocations()
-    //   checkAdminStatus()
-    // }
-  }, [tg])
 
   useEffect(() => {
     // Set today's date as default
     const today = new Date().toISOString().split('T')[0]
     setActiveDate(today)
+    loadLocations()
+    checkAdminStatus()
   }, [])
 
   const loadLocations = async () => {
@@ -74,288 +43,79 @@ function Form() {
   }
 
   const checkAdminStatus = async () => {
-    if (!tg) return
-    
     try {
       const user = await api.getUser()
       if (user && user.role === 'ADMIN') {
         setIsAdmin(true)
       }
+      setUser(user)
     } catch (error) {
       console.error('Failed to check admin status:', error)
     }
   }
 
-  const handleTypeChange = (newType: string) => {
-    setType(newType)
-    setValue('')
-    if (newType !== 'kgs') {
-      setKgsInputs([{ id: 1, value: '' }])
-    }
-  }
-
-  const updateKgsInput = (id: number, value: string) => {
-    setKgsInputs(prev => {
-      const updated = prev.map(input => 
-        input.id === id ? { ...input, value } : input
-      )
-      
-      // If all inputs have values, add a new empty one
-      const allHaveValues = updated.every(inp => inp.value.trim() !== '')
-      if (allHaveValues && updated[updated.length - 1].value.trim() !== '') {
-        const newId = Math.max(...updated.map(i => i.id), 0) + 1
-        return [...updated, { id: newId, value: '' }]
-      }
-      
-      return updated
-    })
-  }
-
-  const removeKgsInput = (id: number) => {
-    if (kgsInputs.length > 1) {
-      setKgsInputs(prev => prev.filter(input => input.id !== id))
-    } else {
-      // Clear the value instead of removing
-      setKgsInputs([{ id: 1, value: '' }])
-    }
-  }
-
-  const showMessage = (text: string, type: 'success' | 'error') => {
-    setMessage({ text, type })
-    setTimeout(() => setMessage(null), 5000)
-  }
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    
-    if (!activeDate || !type || !activeLocation) {
-      showMessage('❌ Пожалуйста, заполните все обязательные поля', 'error')
-      return
-    }
-
-    let finalValue: string
-
-    if (type === 'kgs') {
-      const kgsValues = kgsInputs
-        .map(input => {
-          let val = input.value.trim()
-          val = val.replace(',', '.')
-          return val
-        })
-        .filter(val => val !== '')
-      
-      if (kgsValues.length === 0) {
-        showMessage('❌ Пожалуйста, введите хотя бы одно значение веса рыбы', 'error')
-        return
-      }
-      
-      for (const val of kgsValues) {
-        if (isNaN(parseFloat(val))) {
-          showMessage('❌ Пожалуйста, введите корректные числа', 'error')
-          return
-        }
-      }
-      
-      finalValue = kgsValues.join(', ')
-    } else {
-      if (!value || value.trim() === '') {
-        showMessage('❌ Пожалуйста, введите значение', 'error')
-        return
-      }
-      const normalizedValue = value.replace(',', '.')
-      if (isNaN(parseFloat(normalizedValue))) {
-        showMessage('❌ Пожалуйста, введите корректное число', 'error')
-        return
-      }
-      finalValue = normalizedValue
-    }
-
-    if (!tg) return
-
-    setIsSubmitting(true)
-
-    try {
-      const data = {
-        date: activeDate,
-        location: activeLocation,
-        type,
-        value: finalValue,
-      }
-
-      const result = await api.submitForm(data)
-
-      if (result.success) {
-        showMessage(result.message, 'success')
-        // Reset form
-        setActiveDate(new Date().toISOString().split('T')[0])
-        setType('')
-        setActiveLocation('')
-        setValue('')
-        setKgsInputs([{ id: 1, value: '' }])
-      } else {
-        showMessage(result.error || 'Ошибка отправки формы', 'error')
-      }
-    } catch (error) {
-      showMessage('Ошибка сети. Пожалуйста, попробуйте снова.', 'error')
-    } finally {
-      setIsSubmitting(false)
-    }
-  }
-
-  const getValueLabel = () => {
-    return typeLabels[type] || 'Значение'
-  }
-
-  const getValuePlaceholder = () => {
-    if (type === 'c') {
-      return '(например: 24 или 24,5)'
-    } else if (type === 'kg') {
-      return '(например: 10 или 10,5)'
-    }
-    return ''
-  }
-
   return (
-    <div className="container">
-      {isAdmin && (
-        <div className="userManagement-btn">
-          <button onClick={() => navigate('/userManagement')}>
-            Управление пользователями
-          </button>
-        </div>
-      )}
-      
-      <Tabs defaultValue="Главное" className="tabs-container">
-        <TabsList className="tabs-menu">
-          <TabsTrigger value="Главное" className="tab-item">Главное</TabsTrigger>
-          <TabsTrigger value="Контрольный отлов" className="tab-item">Контрольный отлов</TabsTrigger>
-          <TabsTrigger value="Продажа" className="tab-item">Продажа</TabsTrigger>
-          <TabsTrigger value="Зарыбление" className="tab-item">Зарыбление</TabsTrigger>
-          <TabsTrigger value="Убыль" className="tab-item">Убыль</TabsTrigger>
+    <div className="max-w-[768px] mx-auto">      
+      <Tabs defaultValue="Главное" className="bg-white rounded-xl mb-6 overflow-hidden">
+        <TabsList className="grid grid-cols-1 md:grid-cols-5 bg-[#e8d5ff] items-center p-1 rounded-xl gap-1">
+          <TabsTrigger
+            value="Главное" 
+            className="flex-1 px-2 py-2.5 bg-transparent border-none text-black text-sm font-medium cursor-pointer text-center rounded-lg transition-all whitespace-nowrap overflow-hidden text-ellipsis data-[state=active]:bg-[#3390ec] data-[state=active]:text-white hover:opacity-70">
+              Главное
+          </TabsTrigger>
+          <TabsTrigger
+            value="Контрольный отлов"
+            className="flex-1 px-2 py-2.5 bg-transparent border-none text-black text-sm font-medium cursor-pointer text-center rounded-lg transition-all whitespace-nowrap overflow-hidden text-ellipsis data-[state=active]:bg-[#3390ec] data-[state=active]:text-white hover:opacity-70">
+              Контрольный отлов
+          </TabsTrigger>
+          <TabsTrigger
+            value="Продажа"
+            className="flex-1 px-2 py-2.5 bg-transparent border-none text-black text-sm font-medium cursor-pointer text-center rounded-lg transition-all whitespace-nowrap overflow-hidden text-ellipsis data-[state=active]:bg-[#3390ec] data-[state=active]:text-white hover:opacity-70">
+              Продажа
+          </TabsTrigger>
+          <TabsTrigger
+            value="Зарыбление"
+            className="flex-1 px-2 py-2.5 bg-transparent border-none text-black text-sm font-medium cursor-pointer text-center rounded-lg transition-all whitespace-nowrap overflow-hidden text-ellipsis data-[state=active]:bg-[#3390ec] data-[state=active]:text-white hover:opacity-70">
+              Зарыбление
+          </TabsTrigger>
+          <TabsTrigger
+            value="Убыль"
+            className="flex-1 px-2 py-2.5 bg-transparent border-none text-black text-sm font-medium cursor-pointer text-center rounded-lg transition-all whitespace-nowrap overflow-hidden text-ellipsis data-[state=active]:bg-[#3390ec] data-[state=active]:text-white hover:opacity-70">
+              Убыль
+          </TabsTrigger>
         </TabsList>
-        <TabsContent value="Главное" className="tab-content">
-          <MainForm locations={locations} location={activeLocation} date={activeDate} />
+        <TabsContent value="Главное" className="min-h-[100px]">
+          <MainForm
+            locations={locations}
+            location={activeLocation}
+            date={activeDate}
+            user={user}
+            onLocationChange={setActiveLocation}
+            onDateChange={setActiveDate}
+          />
         </TabsContent>
-        <TabsContent value="Контрольный отлов" className="tab-content">
+        <TabsContent value="Контрольный отлов" className="min-h-[100px]">
           <div></div>
         </TabsContent>
-        <TabsContent value="Продажа" className="tab-content">
+        <TabsContent value="Продажа" className="min-h-[100px]">
           <div></div>
         </TabsContent>
-        <TabsContent value="Зарыбление" className="tab-content">
+        <TabsContent value="Зарыбление" className="min-h-[100px]">
           <div></div>
         </TabsContent>
-        <TabsContent value="Убыль" className="tab-content">
+        <TabsContent value="Убыль" className="min-h-[100px]">
           <div></div>
         </TabsContent>
       </Tabs>
-      
-      <form id="form" onSubmit={handleSubmit}>
-        <div className="form-group">
-          <label htmlFor="date">Дата</label>
-          <input
-            type="date"
-            id="date"
-            name="date"
-            value={activeDate}
-            onChange={(e) => setActiveDate(e.target.value)}
-            required
-          />
-        </div>
 
-        <div className="form-group">
-          <label htmlFor="type">Тип данных</label>
-          <select
-            id="type"
-            name="type"
-            value={type}
-            onChange={(e) => handleTypeChange(e.target.value)}
-            required
+      {isAdmin && (
+        <div className="mb-5 text-center">
+          <button 
+            onClick={() => navigate('/userManagement')}
+            className="w-full px-6 py-3 bg-[var(--tg-theme-button-color,#0088cc)] text-[var(--tg-theme-button-text-color,#ffffff)] border-none rounded-lg cursor-pointer text-sm font-medium hover:opacity-90"
           >
-            <option value="">Выберите тип данных...</option>
-            <option value="c">Температура воды</option>
-            <option value="kg">Выдано корма (кг)</option>
-            <option value="tara">Кислород в воде (мг/л)</option>
-            <option value="kgs">Вес рыбы (кг)</option>
-            <option value="saturation">Сатурация воды (%)</option>
-            <option value="pH">pH воды</option>
-          </select>
-        </div>
-
-        <div className="form-group">
-          <label htmlFor="location">Выберите пруд</label>
-          <select
-            id="location"
-            name="location"
-            value={activeLocation}
-            onChange={(e) => setActiveLocation(e.target.value)}
-            required
-          >
-            <option value="">{locations.length > 0 ? 'Выберите пруд...' : 'Загрузка прудов...'}</option>
-            {locations.map((loc) => (
-              <option key={loc} value={loc}>
-                {loc}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <div className="form-group" id="value-group">
-          <label htmlFor="value" id="value-label">{getValueLabel()}</label>
-          
-          {type === 'kgs' ? (
-            <div id="kgs-values-container" className="kgs-values-container">
-              {kgsInputs.map((input) => (
-                <div key={input.id} className="value-input-group">
-                  <input
-                    type="text"
-                    className="kgs-input"
-                    inputMode="decimal"
-                    pattern="[0-9]+([.,][0-9]+)?"
-                    placeholder="Вес рыбы (5 или 5.2)кг"
-                    value={input.value}
-                    onChange={(e) => updateKgsInput(input.id, e.target.value)}
-                    onBlur={(e) => {
-                      if (kgsInputs.length > 1 && !e.target.value.trim()) {
-                        removeKgsInput(input.id)
-                      }
-                    }}
-                  />
-                  <button
-                    type="button"
-                    className="remove-btn"
-                    onClick={() => removeKgsInput(input.id)}
-                  >
-                    ✕
-                  </button>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div id="single-value-container">
-              <input
-                type="text"
-                id="value"
-                name="value"
-                inputMode="decimal"
-                pattern="[0-9]+([.,][0-9]+)?"
-                placeholder={getValuePlaceholder()}
-                value={value}
-                onChange={(e) => setValue(e.target.value)}
-                required={type !== ''}
-              />
-            </div>
-          )}
-        </div>
-
-        <button type="submit" id="submitBtn" disabled={isSubmitting}>
-          {isSubmitting ? 'Отправка...' : 'Отправить'}
-        </button>
-      </form>
-
-      {message && (
-        <div className={`message ${message.type} show`}>
-          {message.text}
+            Управление пользователями
+          </button>
         </div>
       )}
     </div>

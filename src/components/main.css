@@ -1,48 +1,5 @@
-.container {
-    max-width: 500px;
-    margin: 0 auto;
-}
-
-h1 {
-    margin-bottom: 24px;
-    font-size: 24px;
-    text-align: center;
-}
-
-.form-group {
-    margin-bottom: 20px;
-}
-
-label {
-    display: block;
-    margin-bottom: 8px;
-    font-weight: 500;
-    font-size: 14px;
-}
-
-input,
-textarea,
-select {
-    width: 100%;
-    padding: 12px;
-    border: 1px solid var(--tg-theme-hint-color, #999999);
-    border-radius: 8px;
-    font-size: 16px;
-    background: var(--tg-theme-bg-color, #ffffff);
-    color: var(--tg-theme-text-color, #000000);
-    font-family: inherit;
-}
-
-input[type="date"] {
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-    min-height: 48px;
-    max-width: 100%;
-}
-
-select {
-    cursor: pointer;
+/* Custom select dropdown styling */
+.select-custom {
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23333' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
     background-position: right 12px center;
@@ -55,58 +12,42 @@ select {
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
-select:hover {
+.select-custom:hover {
     border-color: var(--tg-theme-button-color, #3390ec);
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-select:focus {
+.select-custom:focus {
     outline: none;
     border-color: var(--tg-theme-button-color, #3390ec);
     box-shadow: 0 0 0 3px rgba(51, 144, 236, 0.1);
 }
 
-select option {
+.select-custom option {
     padding: 12px;
     background: #ffffff;
     color: #000000;
     border: none;
 }
 
-select option:hover {
+.select-custom option:hover {
     background: #f0f0f0;
 }
 
-select option:checked {
+.select-custom option:checked {
     background: var(--tg-theme-button-color, #3390ec);
     color: #ffffff;
+}
+
+.date-input {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
 }
 
 textarea {
     resize: vertical;
     min-height: 100px;
-}
-
-button {
-    width: 100%;
-    padding: 14px;
-    background: var(--tg-theme-button-color, #3390ec);
-    color: var(--tg-theme-button-text-color, #ffffff);
-    border: none;
-    border-radius: 8px;
-    font-size: 16px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: opacity 0.2s;
-}
-
-button:hover {
-    opacity: 0.9;
-}
-
-button:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
 }
 
 .message {
@@ -164,88 +105,3 @@ button:disabled {
     overflow-y: auto;
 }
 
-.username-text {
-    margin-bottom: 20px;
-}
-
-.userManagement-btn {
-    margin-bottom: 20px;
-    text-align: center;
-}
-
-.userManagement-btn button {
-    padding: 12px 24px;
-    background: var(--tg-theme-button-color, #0088cc);
-    color: var(--tg-theme-button-text-color, #ffffff);
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 14px;
-    font-weight: 500;
-    width: 100%;
-}
-
-.userManagement-btn button:hover {
-    opacity: 0.9;
-}
-
-.tabs-container {
-    background: #ffffff;
-    border-radius: 12px;
-    margin-bottom: 24px;
-    overflow: hidden;
-}
-
-.tabs-menu {
-    display: grid;
-    grid-template-columns: 1fr;
-    background: #e8d5ff;
-    align-items: center;
-    padding: 4px;
-    border-radius: 12px;
-    gap: 4px;
-}
-
-@media (min-width: 768px) {
-    .tabs-menu {
-        grid-template-columns: repeat(5, 1fr);
-    }
-}
-
-.tab-item {
-    flex: 1;
-    padding: 10px 8px;
-    background: transparent;
-    border: none;
-    color: #000000;
-    font-size: 14px;
-    font-weight: 500;
-    cursor: pointer;
-    text-align: center;
-    border-radius: 8px;
-    transition: all 0.2s;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.tab-item.active,
-.tab-item[data-state="active"] {
-    background: #3390ec;
-    color: #ffffff;
-}
-
-.tab-item:hover:not(.active):not([data-state="active"]) {
-    opacity: 0.7;
-}
-
-.tab-separator {
-    width: 1px;
-    height: 20px;
-    background: #d0b8e8;
-    margin: 0 2px;
-}
-
-.tab-content {
-    min-height: 100px;
-}
