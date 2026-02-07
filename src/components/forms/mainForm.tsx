@@ -107,14 +107,19 @@ function MainForm({ locations: initialLocations, location: initialLocation, date
       <div className="mb-5">
         <label htmlFor="oxygen" className="block mb-2 font-medium text-sm">Кислород в воде (мг/л)</label>
         <input
-          type="number"
+          type="text"
           id="oxygen"
           name="oxygen"
-          step="0.1"
           inputMode="decimal"
+          pattern="[0-9]+([.,][0-9]+)?"
           placeholder="0,0"
           value={formData.oxygen}
-          onChange={(e) => setFormData({ ...formData, oxygen: e.target.value })}
+          onChange={(e) => {
+            const value = e.target.value
+            if (value === '' || /^[0-9]*[.,]?[0-9]*$/.test(value)) {
+              setFormData({ ...formData, oxygen: value })
+            }
+          }}
           className="w-full p-3 border border-[var(--tg-theme-hint-color,#999999)] rounded-lg text-base bg-[var(--tg-theme-bg-color,#ffffff)] text-[var(--tg-theme-text-color,#000000)] font-inherit"
         />
       </div>
@@ -122,14 +127,19 @@ function MainForm({ locations: initialLocations, location: initialLocation, date
       <div className="mb-5">
         <label htmlFor="temperature" className="block mb-2 font-medium text-sm">Температура воды (°C)</label>
         <input
-          type="number"
+          type="text"
           id="temperature"
           name="temperature"
-          step="0.1"
           inputMode="decimal"
+          pattern="[0-9]+([.,][0-9]+)?"
           placeholder="0,0"
           value={formData.temperature}
-          onChange={(e) => setFormData({ ...formData, temperature: e.target.value })}
+          onChange={(e) => {
+            const value = e.target.value
+            if (value === '' || /^[0-9]*[.,]?[0-9]*$/.test(value)) {
+              setFormData({ ...formData, temperature: value })
+            }
+          }}
           className="w-full p-3 border border-[var(--tg-theme-hint-color,#999999)] rounded-lg text-base bg-[var(--tg-theme-bg-color,#ffffff)] text-[var(--tg-theme-text-color,#000000)] font-inherit"
         />
       </div>
@@ -137,14 +147,19 @@ function MainForm({ locations: initialLocations, location: initialLocation, date
       <div className="mb-5">
         <label htmlFor="saturation" className="block mb-2 font-medium text-sm">Сатурация воды (%)</label>
         <input
-          type="number"
+          type="text"
           id="saturation"
           name="saturation"
-          step="0.1"
           inputMode="decimal"
+          pattern="[0-9]+([.,][0-9]+)?"
           placeholder="0,0"
           value={formData.saturation}
-          onChange={(e) => setFormData({ ...formData, saturation: e.target.value })}
+          onChange={(e) => {
+            const value = e.target.value
+            if (value === '' || /^[0-9]*[.,]?[0-9]*$/.test(value)) {
+              setFormData({ ...formData, saturation: value })
+            }
+          }}
           className="w-full p-3 border border-[var(--tg-theme-hint-color,#999999)] rounded-lg text-base bg-[var(--tg-theme-bg-color,#ffffff)] text-[var(--tg-theme-text-color,#000000)] font-inherit"
         />
       </div>
@@ -152,14 +167,19 @@ function MainForm({ locations: initialLocations, location: initialLocation, date
       <div className="mb-5">
         <label htmlFor="pH" className="block mb-2 font-medium text-sm">pH</label>
         <input
-          type="number"
+          type="text"
           id="pH"
           name="pH"
-          step="0.1"
           inputMode="decimal"
+          pattern="[0-9]+([.,][0-9]+)?"
           placeholder="0,0"
           value={formData.pH}
-          onChange={(e) => setFormData({ ...formData, pH: e.target.value })}
+          onChange={(e) => {
+            const value = e.target.value
+            if (value === '' || /^[0-9]*[.,]?[0-9]*$/.test(value)) {
+              setFormData({ ...formData, pH: value })
+            }
+          }}
           className="w-full p-3 border border-[var(--tg-theme-hint-color,#999999)] rounded-lg text-base bg-[var(--tg-theme-bg-color,#ffffff)] text-[var(--tg-theme-text-color,#000000)] font-inherit"
         />
       </div>
@@ -167,14 +187,19 @@ function MainForm({ locations: initialLocations, location: initialLocation, date
       <div className="mb-5">
         <label htmlFor="pH" className="block mb-2 font-medium text-sm">Выдано корма (кг)</label>
         <input
-          type="number"
+          type="text"
           id="feed"
           name="feed"
-          step="0.1"
           inputMode="decimal"
+          pattern="[0-9]+([.,][0-9]+)?"
           placeholder="0,0"
           value={formData.feed}
-          onChange={(e) => setFormData({ ...formData, feed: e.target.value })}
+          onChange={(e) => {
+            const value = e.target.value
+            if (value === '' || /^[0-9]*[.,]?[0-9]*$/.test(value)) {
+              setFormData({ ...formData, feed: value })
+            }
+          }}
           className="w-full p-3 border border-[var(--tg-theme-hint-color,#999999)] rounded-lg text-base bg-[var(--tg-theme-bg-color,#ffffff)] text-[var(--tg-theme-text-color,#000000)] font-inherit"
         />
       </div>

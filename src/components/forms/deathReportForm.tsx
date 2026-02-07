@@ -195,7 +195,7 @@ function DeathReportForm({ locations: initialLocations, location: initialLocatio
                     removeDataRow(row.id)
                   }
                 }}
-                className="flex-1 p-3 border border-[var(--tg-theme-hint-color,#999999)] rounded-lg text-base bg-[var(--tg-theme-bg-color,#ffffff)] text-[var(--tg-theme-text-color,#000000)] font-inherit cursor-pointer select-custom"
+                className="flex-1 w-[40%] p-3 border border-[var(--tg-theme-hint-color,#999999)] rounded-lg text-base bg-[var(--tg-theme-bg-color,#ffffff)] text-[var(--tg-theme-text-color,#000000)] font-inherit cursor-pointer select-custom"
               >
                 <option value="">{fishTypes.length > 0 ? 'Тип рыбы...' : 'Загрузка...'}</option>
                 {fishTypes.map((type) => (
@@ -222,7 +222,7 @@ function DeathReportForm({ locations: initialLocations, location: initialLocatio
                     removeDataRow(row.id)
                   }
                 }}
-                className="flex-1 p-3 border border-[var(--tg-theme-hint-color,#999999)] rounded-lg text-base bg-[var(--tg-theme-bg-color,#ffffff)] text-[var(--tg-theme-text-color,#000000)] font-inherit"
+                className="flex-1 w-[40%] p-3 border border-[var(--tg-theme-hint-color,#999999)] rounded-lg text-base bg-[var(--tg-theme-bg-color,#ffffff)] text-[var(--tg-theme-text-color,#000000)] font-inherit"
               />
               {dataRows.length > 1 && (
                 <button
@@ -234,7 +234,7 @@ function DeathReportForm({ locations: initialLocations, location: initialLocatio
                       removeDataRow(row.id)
                     }
                   }}
-                  className="px-4 py-3 bg-[#dc3545] text-white rounded-lg cursor-pointer text-sm font-medium hover:opacity-90 min-w-[50px]"
+                  className="px-4 w-[20%] py-3 bg-[#dc3545] text-white rounded-lg cursor-pointer text-sm font-medium hover:opacity-90 min-w-[50px]"
                 >
                   ✕
                 </button>
@@ -246,7 +246,7 @@ function DeathReportForm({ locations: initialLocations, location: initialLocatio
 
       <button
         type="submit"
-        className="w-full px-6 py-3 bg-[var(--tg-theme-button-color,#0088cc)] text-[var(--tg-theme-button-text-color,#ffffff)] border-none rounded-lg cursor-pointer text-sm font-medium hover:opacity-90 disabled:opacity-60 disabled:cursor-not-allowed"
+        className="w-full  px-6 py-3 bg-[var(--tg-theme-button-color,#0088cc)] text-[var(--tg-theme-button-text-color,#ffffff)] border-none rounded-lg cursor-pointer text-sm font-medium hover:opacity-90 disabled:opacity-60 disabled:cursor-not-allowed"
       >
         Отправить
       </button>

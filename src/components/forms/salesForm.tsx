@@ -198,14 +198,19 @@ function SalesForm({ locations: initialLocations, location: initialLocation, dat
       <div className="mb-5">
         <label htmlFor="kg" className="block mb-2 font-medium text-sm">Общий вес (кг)</label>
         <input
-          type="number"
+          type="text"
           id="kg"
           name="kg"
-          step="0.1"
           inputMode="decimal"
+          pattern="[0-9]+([.,][0-9]+)?"
           placeholder="0,0"
           value={formData.kg}
-          onChange={(e) => setFormData(prev => ({ ...prev, kg: e.target.value }))}
+          onChange={(e) => {
+            const value = e.target.value
+            if (value === '' || /^[0-9]*[.,]?[0-9]*$/.test(value)) {
+              setFormData(prev => ({ ...prev, kg: value }))
+            }
+          }}
           className="w-full p-3 border border-[var(--tg-theme-hint-color,#999999)] rounded-lg text-base bg-[var(--tg-theme-bg-color,#ffffff)] text-[var(--tg-theme-text-color,#000000)] font-inherit"
         />
       </div>
