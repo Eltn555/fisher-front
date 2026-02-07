@@ -1,4 +1,4 @@
-import { HashRouter, Routes, Route } from 'react-router-dom'
+import { HashRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import Form from './components/main'
@@ -10,6 +10,8 @@ function App() {
       <Routes>
         <Route path="/" element={<Form />} />
         <Route path="/userManagement" element={<UserManagement />} />
+        {/* Catch-all route for Telegram's URL params */}
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
       <ToastContainer
         position="top-center"

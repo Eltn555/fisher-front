@@ -49,7 +49,7 @@ function Form() {
 
   return (
     <div className="max-w-[768px] mx-auto">      
-      <Tabs defaultValue="Главное" className="bg-white rounded-xl mb-6 overflow-hidden">
+      <Tabs defaultValue="Главное" className="rounded-xl mb-6 overflow-hidden">
         <TabsList className="grid grid-cols-1 md:grid-cols-5 bg-[#e8d5ff] items-center p-1 rounded-xl gap-1">
           <TabsTrigger
             value="Главное" 
