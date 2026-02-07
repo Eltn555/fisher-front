@@ -1,4 +1,4 @@
-import type { ControlCatchData, MainFormData } from '../types/form.types'
+import type { ControlCatchData, MainFormData, SalesData, FishStockingData, DeathReportData } from '../types/form.types'
 
 // Get API base URL from environment variable or use relative path
 const getApiBaseUrl = (): string => {
@@ -96,6 +96,12 @@ export const api = {
     return response.json()
   },
 
+  //get fishTypes
+  getFishTypes: async () => {
+    const response = await fetch(`${getApiBaseUrl()}/miniapp/fishTypes`)
+    return response.json()
+  },
+
   // submit main form data
   submitMainForm: async (data: MainFormData) => {
     const response = await fetch(`${getApiBaseUrl()}/miniapp/submitMainForm`, {
@@ -109,6 +115,36 @@ export const api = {
   //submit контрольный отлов
   submitControlCatch: async (data: ControlCatchData) => {
     const response = await fetch(`${getApiBaseUrl()}/miniapp/submitControlCatch`, {
+      method: 'POST',
+      headers: createHeaders(true),
+      body: JSON.stringify(data),
+    })
+    return response.json()
+  },
+
+  // submit sales
+  submitSales: async (data: SalesData) => {
+    const response = await fetch(`${getApiBaseUrl()}/miniapp/submitSales`, {
+      method: 'POST',
+      headers: createHeaders(true),
+      body: JSON.stringify(data),
+    })
+    return response.json()
+  },
+
+  // submit fish stocking
+  submitFishStocking: async (data: FishStockingData) => {
+    const response = await fetch(`${getApiBaseUrl()}/miniapp/submitFishStocking`, {
+      method: 'POST',
+      headers: createHeaders(true),
+      body: JSON.stringify(data),
+    })
+    return response.json()
+  },
+
+  // death report
+  submitDeathReport: async (data: DeathReportData) => {
+    const response = await fetch(`${getApiBaseUrl()}/miniapp/submitDeathReport`, {
       method: 'POST',
       headers: createHeaders(true),
       body: JSON.stringify(data),
