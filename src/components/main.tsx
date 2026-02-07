@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { api } from '../services/api'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from './ui/tabs'
@@ -7,20 +7,11 @@ import MainForm from './forms/mainForm'
 import ControlCatchForm from './forms/controlCatchForm'
 import SalesForm from './forms/salesForm'
 import FishStockingForm from './forms/fishStockingForm'
-
-const typeLabels: Record<string, string> = {
-  'c': 'Температура воды (°C)',
-  'kg': 'Выдано корма (кг)',
-  'tara': 'Кислород в воде (мг/л)',
-  'kgs': 'Вес рыбы (кг)',
-  'saturation': 'Сатурация воды (%)',
-  'pH': 'pH воды'
-}
+import DeathReportForm from './forms/deathReportForm'
 
 function Form() {
   const navigate = useNavigate()
   const [activeDate, setActiveDate] = useState('')
-  const [user, setUser] = useState<any | null>(null)
   const [activeLocation, setActiveLocation] = useState('')
   const [locations, setLocations] = useState<string[]>([])
   const [isAdmin, setIsAdmin] = useState(false)
@@ -51,7 +42,6 @@ function Form() {
       if (user && user.role === 'ADMIN') {
         setIsAdmin(true)
       }
-      setUser(user)
     } catch (error) {
       console.error('Failed to check admin status:', error)
     }
@@ -124,7 +114,13 @@ function Form() {
           />
         </TabsContent>
         <TabsContent value="Убыль" className="min-h-[100px]">
-          <div></div>
+          <DeathReportForm
+            locations={locations}
+            location={activeLocation}
+            date={activeDate}
+            onLocationChange={setActiveLocation}
+            onDateChange={setActiveDate}
+          />
         </TabsContent>
       </Tabs>
 
