@@ -6,12 +6,11 @@ interface MainFormProps {
   locations: string[]
   location?: string
   date?: string
-  user?: any
   onLocationChange?: (location: string) => void
   onDateChange?: (date: string) => void
 }
 
-function MainForm({ locations: initialLocations, location: initialLocation, date: initialDate, user: initialUser, onLocationChange, onDateChange }: MainFormProps) {
+function MainForm({ locations: initialLocations, location: initialLocation, date: initialDate, onLocationChange, onDateChange }: MainFormProps) {
   const [locations, setLocations] = useState<string[]>(initialLocations || [])
   const [formData, setFormData] = useState({
     location: initialLocation || '',
