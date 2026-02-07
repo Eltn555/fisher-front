@@ -4,6 +4,7 @@ import { api } from '../services/api'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from './ui/tabs'
 import './main.css'
 import MainForm from './forms/mainForm'
+import ControlCatchForm from './forms/controlCatchForm'
 
 const typeLabels: Record<string, string> = {
   'c': 'Температура воды (°C)',
@@ -89,13 +90,18 @@ function Form() {
             locations={locations}
             location={activeLocation}
             date={activeDate}
-            user={user}
             onLocationChange={setActiveLocation}
             onDateChange={setActiveDate}
           />
         </TabsContent>
         <TabsContent value="Контрольный отлов" className="min-h-[100px]">
-          <div></div>
+          <ControlCatchForm
+            locations={locations}
+            location={activeLocation}
+            date={activeDate}
+            onLocationChange={setActiveLocation}
+            onDateChange={setActiveDate}
+          />
         </TabsContent>
         <TabsContent value="Продажа" className="min-h-[100px]">
           <div></div>

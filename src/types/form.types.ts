@@ -7,3 +7,9 @@ export interface MainFormData {
   pH: string
   feed: string
 }
+
+export interface ControlCatchData {
+  date: string
+  location: string
+  catchKGs: number[]
+}

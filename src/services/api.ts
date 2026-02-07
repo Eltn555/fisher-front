@@ -1,4 +1,4 @@
-import type { MainFormData } from '../types/mainForm.type'
+import type { ControlCatchData, MainFormData } from '../types/form.types'
 
 // Get API base URL from environment variable or use relative path
 const getApiBaseUrl = (): string => {
@@ -99,6 +99,16 @@ export const api = {
   // submit main form data
   submitMainForm: async (data: MainFormData) => {
     const response = await fetch(`${getApiBaseUrl()}/miniapp/submitMainForm`, {
+      method: 'POST',
+      headers: createHeaders(true),
+      body: JSON.stringify(data),
+    })
+    return response.json()
+  },
+
+  //submit контрольный отлов
+  submitControlCatch: async (data: ControlCatchData) => {
+    const response = await fetch(`${getApiBaseUrl()}/miniapp/submitControlCatch`, {
       method: 'POST',
       headers: createHeaders(true),
       body: JSON.stringify(data),
