@@ -5,6 +5,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from './ui/tabs'
 import './main.css'
 import MainForm from './forms/mainForm'
 import ControlCatchForm from './forms/controlCatchForm'
+import SalesForm from './forms/salesForm'
 
 const typeLabels: Record<string, string> = {
   'c': 'Температура воды (°C)',
@@ -104,7 +105,13 @@ function Form() {
           />
         </TabsContent>
         <TabsContent value="Продажа" className="min-h-[100px]">
-          <div></div>
+          <SalesForm
+            locations={locations}
+            location={activeLocation}
+            date={activeDate}
+            onLocationChange={setActiveLocation}
+            onDateChange={setActiveDate}
+          />
         </TabsContent>
         <TabsContent value="Зарыбление" className="min-h-[100px]">
           <div></div>

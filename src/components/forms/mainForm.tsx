@@ -112,7 +112,7 @@ function MainForm({ locations: initialLocations, location: initialLocation, date
           name="oxygen"
           step="0.1"
           inputMode="decimal"
-          placeholder="0.0"
+          placeholder="0,0"
           value={formData.oxygen}
           onChange={(e) => setFormData({ ...formData, oxygen: e.target.value })}
           className="w-full p-3 border border-[var(--tg-theme-hint-color,#999999)] rounded-lg text-base bg-[var(--tg-theme-bg-color,#ffffff)] text-[var(--tg-theme-text-color,#000000)] font-inherit"
@@ -127,7 +127,7 @@ function MainForm({ locations: initialLocations, location: initialLocation, date
           name="temperature"
           step="0.1"
           inputMode="decimal"
-          placeholder="0.0"
+          placeholder="0,0"
           value={formData.temperature}
           onChange={(e) => setFormData({ ...formData, temperature: e.target.value })}
           className="w-full p-3 border border-[var(--tg-theme-hint-color,#999999)] rounded-lg text-base bg-[var(--tg-theme-bg-color,#ffffff)] text-[var(--tg-theme-text-color,#000000)] font-inherit"
@@ -142,7 +142,7 @@ function MainForm({ locations: initialLocations, location: initialLocation, date
           name="saturation"
           step="0.1"
           inputMode="decimal"
-          placeholder="0.0"
+          placeholder="0,0"
           value={formData.saturation}
           onChange={(e) => setFormData({ ...formData, saturation: e.target.value })}
           className="w-full p-3 border border-[var(--tg-theme-hint-color,#999999)] rounded-lg text-base bg-[var(--tg-theme-bg-color,#ffffff)] text-[var(--tg-theme-text-color,#000000)] font-inherit"
@@ -157,7 +157,7 @@ function MainForm({ locations: initialLocations, location: initialLocation, date
           name="pH"
           step="0.1"
           inputMode="decimal"
-          placeholder="0.0"
+          placeholder="0,0"
           value={formData.pH}
           onChange={(e) => setFormData({ ...formData, pH: e.target.value })}
           className="w-full p-3 border border-[var(--tg-theme-hint-color,#999999)] rounded-lg text-base bg-[var(--tg-theme-bg-color,#ffffff)] text-[var(--tg-theme-text-color,#000000)] font-inherit"
@@ -172,7 +172,7 @@ function MainForm({ locations: initialLocations, location: initialLocation, date
           name="feed"
           step="0.1"
           inputMode="decimal"
-          placeholder="0.0"
+          placeholder="0,0"
           value={formData.feed}
           onChange={(e) => setFormData({ ...formData, feed: e.target.value })}
           className="w-full p-3 border border-[var(--tg-theme-hint-color,#999999)] rounded-lg text-base bg-[var(--tg-theme-bg-color,#ffffff)] text-[var(--tg-theme-text-color,#000000)] font-inherit"
