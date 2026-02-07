@@ -9,16 +9,8 @@ const getApiBaseUrl = (): string => {
   return String(apiUrl).replace(/^['"]|['"]$/g, '').trim()
 }
 
-// Manual Telegram ID for testing (set to null to use automatic detection)
-const MANUAL_TELEGRAM_ID: number | null = 791430493
-
 // Helper function to get init data from Telegram WebApp
 const getInitData = (): string => {
-  if (MANUAL_TELEGRAM_ID !== null) {
-    const userData = encodeURIComponent(JSON.stringify({ id: MANUAL_TELEGRAM_ID }))
-    return `user=${userData}`
-  }
-  
   if (window.Telegram?.WebApp) {
     return window.Telegram.WebApp.initData
   }
