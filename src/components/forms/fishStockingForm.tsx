@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import { api } from '../../services/api'
 import { toast } from 'react-toastify'
-import type { SalesData } from '../../types/form.types'
+import type { FishStockingData } from '../../types/form.types'
 
-interface SalesFormProps {
+interface FishStockingFormProps {
   locations: string[]
   location?: string
   date?: string
@@ -11,13 +11,12 @@ interface SalesFormProps {
   onDateChange?: (date: string) => void
 }
 
-function SalesForm({ locations: initialLocations, location: initialLocation, date: initialDate, onLocationChange, onDateChange }: SalesFormProps) {
+function FishStockingForm({ locations: initialLocations, location: initialLocation, date: initialDate, onLocationChange, onDateChange }: FishStockingFormProps) {
   const [locations, setLocations] = useState<string[]>(initialLocations || [])
   const [fishTypes, setFishTypes] = useState<string[]>([])
   const [formData, setFormData] = useState({
     location: initialLocation || '',
     type: '',
-    quantity: '',
     kg: '',
     date: initialDate || new Date().toISOString().split('T')[0]
   })
@@ -66,18 +65,7 @@ function SalesForm({ locations: initialLocations, location: initialLocation, dat
     }
 
     if (!formData.type) {
-      toast.error('Пожалуйста, введите тип')
-      return
-    }
-
-    if (!formData.quantity || formData.quantity.trim() === '') {
-      toast.error('Пожалуйста, введите количество')
-      return
-    }
-
-    const quantityValue = parseFloat(formData.quantity.replace(',', '.'))
-    if (isNaN(quantityValue) || quantityValue <= 0) {
-      toast.error('Пожалуйста, введите корректное количество')
+      toast.error('Пожалуйста, выберите тип рыбы')
       return
     }
 
@@ -93,22 +81,20 @@ function SalesForm({ locations: initialLocations, location: initialLocation, dat
     }
     
     try {
-      const data: SalesData = {
+      const data: FishStockingData = {
         date: formData.date,
         location: formData.location,
         type: formData.type,
-        quantity: quantityValue,
         kg: kgValue
       }
 
-      const response = await api.submitSales(data)
+      const response = await api.submitFishStocking(data)
       if (response.success) {
         toast.success(response.message || 'Данные успешно отправлены')
         // Reset form except location and date
         setFormData(prev => ({
           ...prev,
           type: '',
-          quantity: '',
           kg: ''
         }))
       } else {
@@ -181,31 +167,22 @@ function SalesForm({ locations: initialLocations, location: initialLocation, dat
       </div>
 
       <div className="mb-5">
-        <label htmlFor="quantity" className="block mb-2 font-medium text-sm">Количество</label>
-        <input
-          type="number"
-          id="quantity"
-          name="quantity"
-          step="1"
-          inputMode="numeric"
-          placeholder="0"
-          value={formData.quantity}
-          onChange={(e) => setFormData(prev => ({ ...prev, quantity: e.target.value }))}
-          className="w-full p-3 border border-[var(--tg-theme-hint-color,#999999)] rounded-lg text-base bg-[var(--tg-theme-bg-color,#ffffff)] text-[var(--tg-theme-text-color,#000000)] font-inherit"
-        />
-      </div>
-
-      <div className="mb-5">
         <label htmlFor="kg" className="block mb-2 font-medium text-sm">Общий вес (кг)</label>
         <input
-          type="number"
+          type="text"
           id="kg"
           name="kg"
-          step="0.1"
           inputMode="decimal"
+          pattern="[0-9]+([.,][0-9]+)?"
           placeholder="0,0"
           value={formData.kg}
-          onChange={(e) => setFormData(prev => ({ ...prev, kg: e.target.value }))}
+          onChange={(e) => {
+            const value = e.target.value
+            // Allow numbers, comma, and dot
+            if (value === '' || /^[0-9]*[.,]?[0-9]*$/.test(value)) {
+              setFormData(prev => ({ ...prev, kg: value }))
+            }
+          }}
           className="w-full p-3 border border-[var(--tg-theme-hint-color,#999999)] rounded-lg text-base bg-[var(--tg-theme-bg-color,#ffffff)] text-[var(--tg-theme-text-color,#000000)] font-inherit"
         />
       </div>
@@ -220,4 +197,4 @@ function SalesForm({ locations: initialLocations, location: initialLocation, dat
   )
 }
 
-export default SalesForm
+export default FishStockingForm

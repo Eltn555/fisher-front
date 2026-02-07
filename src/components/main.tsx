@@ -6,6 +6,7 @@ import './main.css'
 import MainForm from './forms/mainForm'
 import ControlCatchForm from './forms/controlCatchForm'
 import SalesForm from './forms/salesForm'
+import FishStockingForm from './forms/fishStockingForm'
 
 const typeLabels: Record<string, string> = {
   'c': 'Температура воды (°C)',
@@ -114,7 +115,13 @@ function Form() {
           />
         </TabsContent>
         <TabsContent value="Зарыбление" className="min-h-[100px]">
-          <div></div>
+          <FishStockingForm
+            locations={locations}
+            location={activeLocation}
+            date={activeDate}
+            onLocationChange={setActiveLocation}
+            onDateChange={setActiveDate}
+          />
         </TabsContent>
         <TabsContent value="Убыль" className="min-h-[100px]">
           <div></div>
