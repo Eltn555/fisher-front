@@ -20,7 +20,6 @@ function FishStockingForm({ locations: initialLocations, location: initialLocati
     kg: '',
     date: initialDate || new Date().toISOString().split('T')[0],
     quantity: '',
-    mediumWeight: ''
   })
 
   useEffect(() => {
@@ -81,17 +80,6 @@ function FishStockingForm({ locations: initialLocations, location: initialLocati
       return
     }
 
-    if (!formData.mediumWeight || formData.mediumWeight.trim() === '') {
-      toast.error('Пожалуйста, введите средний вес')
-      return
-    }
-
-    const mediumWeightValue = parseFloat(formData.mediumWeight.replace(',', '.'))
-    if (isNaN(mediumWeightValue) || mediumWeightValue <= 0) {
-      toast.error('Пожалуйста, введите корректный средний вес')
-      return
-    }
-
     const kgValue = parseFloat(formData.kg.replace(',', '.'))
     if (isNaN(kgValue) || kgValue <= 0) {
       toast.error('Пожалуйста, введите корректный вес')
@@ -110,8 +98,7 @@ function FishStockingForm({ locations: initialLocations, location: initialLocati
         location: formData.location,
         type: formData.type,
         kg: kgValue,
-        quantity: quantityValue,
-        mediumWeight: mediumWeightValue
+        quantity: quantityValue
       }
 
       const response = await api.submitFishStocking(data)
@@ -226,26 +213,6 @@ function FishStockingForm({ locations: initialLocations, location: initialLocati
           }}
           className="w-full p-3 border border-[var(--tg-theme-hint-color,#999999)] rounded-lg text-base bg-[var(--tg-theme-bg-color,#ffffff)] text-[var(--tg-theme-text-color,#000000)] font-inherit"
         />
-      </div>
-
-      <div className="mb-5">
-        <label htmlFor="mediumWeight" className="block mb-2 font-medium text-sm">Средний вес (кг)</label>
-        <input
-          type="text"
-          id="mediumWeight"
-          name="mediumWeight"
-          inputMode="decimal"
-          pattern="[0-9]+([.,][0-9]+)?"
-          placeholder="0,0"
-          value={formData.mediumWeight}
-          onChange={(e) => {
-        const value = e.target.value
-        if (value === '' || /^[0-9]*[.,]?[0-9]*$/.test(value)) {
-          setFormData(prev => ({ ...prev, mediumWeight: value }))
-        }
-      }}
-      className="w-full p-3 border border-[var(--tg-theme-hint-color,#999999)] rounded-lg text-base bg-[var(--tg-theme-bg-color,#ffffff)] text-[var(--tg-theme-text-color,#000000)] font-inherit"
-    />
       </div>
 
       <button

@@ -28,7 +28,6 @@ export interface FishStockingData {
   type: string
   quantity: number
   kg: number
-  mediumWeight: number
 }
 
 export interface DeathReportData {
