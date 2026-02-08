@@ -18,7 +18,8 @@ function FishStockingForm({ locations: initialLocations, location: initialLocati
     location: initialLocation || '',
     type: '',
     kg: '',
-    date: initialDate || new Date().toISOString().split('T')[0]
+    date: initialDate || new Date().toISOString().split('T')[0],
+    quantity: ''
   })
 
   useEffect(() => {
@@ -74,9 +75,20 @@ function FishStockingForm({ locations: initialLocations, location: initialLocati
       return
     }
 
+    if (!formData.quantity || formData.quantity.trim() === '') {
+      toast.error('Пожалуйста, введите количество')
+      return
+    }
+
     const kgValue = parseFloat(formData.kg.replace(',', '.'))
     if (isNaN(kgValue) || kgValue <= 0) {
       toast.error('Пожалуйста, введите корректный вес')
+      return
+    }
+
+    const quantityValue = parseFloat(formData.quantity.replace(',', '.'))
+    if (isNaN(quantityValue) || quantityValue <= 0) {
+      toast.error('Пожалуйста, введите корректное количество')
       return
     }
     
@@ -85,7 +97,8 @@ function FishStockingForm({ locations: initialLocations, location: initialLocati
         date: formData.date,
         location: formData.location,
         type: formData.type,
-        kg: kgValue
+        kg: kgValue,
+        quantity: quantityValue
       }
 
       const response = await api.submitFishStocking(data)
@@ -167,6 +180,21 @@ function FishStockingForm({ locations: initialLocations, location: initialLocati
       </div>
 
       <div className="mb-5">
+        <label htmlFor="quantity" className="block mb-2 font-medium text-sm">Количество</label>
+        <input
+          type="number"
+          id="quantity"
+          name="quantity"
+          step="1"
+          inputMode="numeric"
+          placeholder="0"
+          value={formData.quantity}
+          onChange={(e) => setFormData(prev => ({ ...prev, quantity: e.target.value }))}
+          className="w-full p-3 border border-[var(--tg-theme-hint-color,#999999)] rounded-lg text-base bg-[var(--tg-theme-bg-color,#ffffff)] text-[var(--tg-theme-text-color,#000000)] font-inherit"
+        />
+      </div>
+
+      <div className="mb-5">
         <label htmlFor="kg" className="block mb-2 font-medium text-sm">Общий вес (кг)</label>
         <input
           type="text"
@@ -178,7 +206,6 @@ function FishStockingForm({ locations: initialLocations, location: initialLocati
           value={formData.kg}
           onChange={(e) => {
             const value = e.target.value
-            // Allow numbers, comma, and dot
             if (value === '' || /^[0-9]*[.,]?[0-9]*$/.test(value)) {
               setFormData(prev => ({ ...prev, kg: value }))
             }

@@ -26,6 +26,7 @@ export interface FishStockingData {
   date: string
   location: string
   type: string
+  quantity: number
   kg: number
 }
 
