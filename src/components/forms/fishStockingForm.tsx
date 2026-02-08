@@ -108,7 +108,8 @@ function FishStockingForm({ locations: initialLocations, location: initialLocati
         setFormData(prev => ({
           ...prev,
           type: '',
-          kg: ''
+          kg: '',
+          quantity: ''
         }))
       } else {
         toast.error(response.message || 'Не удалось отправить данные')
